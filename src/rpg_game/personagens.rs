@@ -4,22 +4,24 @@ use uuid::Uuid;
 use crate::rpg_game::itens::{Arma, Armadura, ItemTipo};
 
 pub struct Personagem {
-    id: Uuid,
-    nome: String,
-    vida: u32,
-    forca:u32,
-    // decidi implementar o invetario no struct Game, usando 1 inventario universal para todos os personagens
-    armadura: Armadura,
-    arma: Arma,
-    classe: Classe,
+    pub id: Uuid,
+    pub nome: String,
+    pub vida: u32,
+    pub forca:u32,
+    pub nivel:u32,
+    pub armadura: Armadura,
+    pub defesa: u32,
+    pub arma: Arma,
+    pub classe: Classe,
+    pub inventario: HashMap<Uuid, ItemTipo>,
 }
+
+#[derive(Clone)]
 
 pub enum Classe {
     Guerreiro,
     Mago,
     Tanque,
-    Arqueiro,
-    Suporte,
 }
 
 impl Classe {
@@ -28,8 +30,16 @@ impl Classe {
             Classe::Guerreiro => "Guerreiro",
             Classe::Mago => "Mago",
             Classe::Tanque => "Tanque",
-            Classe::Arqueiro => "Arqueiro",
-            Classe::Suporte => "Suporte",
         }
+    }
+}
+
+impl Personagem {
+    pub fn get_arma(&self) -> &Arma {
+        &self.arma
+    }
+
+    pub fn get_armadura(&self) -> &Armadura {
+        &self.armadura
     }
 }

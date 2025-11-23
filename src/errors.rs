@@ -6,4 +6,5 @@ pub enum ErroRPG {
     ErroPersistencia(String), 
     EntradaInvalida(String), 
     ItemNaoUsavel(String),
+    ArmaIncompativel(String),
 }
