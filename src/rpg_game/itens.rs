@@ -1,15 +1,16 @@
 use uuid::Uuid;
-
+use serde::{Serialize, Deserialize};
 use crate::{errors::ErroRPG, rpg_game::personagens::{Classe, Personagem}, traits::ItemComportamento};
 
+#[derive(Clone, Serialize, Deserialize)]
 pub enum ItemTipo {
     Arma(Arma),
     Armadura(Armadura),
     Consumivel(Consumivel),
 }
 
-#[derive(Clone)]
 
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Arma {
     id: Uuid,
     nome: String,
@@ -19,7 +20,7 @@ pub struct Arma {
     raridade: String,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Armadura {
     id: Uuid,
     nome: String,
@@ -27,8 +28,7 @@ pub struct Armadura {
     raridade: String,
 }
 
-#[derive(Clone)]
-
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Consumivel {
     id: Uuid,
     nome: String,
@@ -36,8 +36,7 @@ pub struct Consumivel {
     descricao: String,
 }
 
-#[derive(Clone)]
-
+#[derive(Clone, Serialize, Deserialize)]
 pub enum Efeito {
     Fisico, //dano normal
     Congelamento, //ataque de congelamento adiciona 1 ponto de congelamento, com 3 pontos o oponente fica congelado e perde a vez
@@ -68,7 +67,45 @@ impl Efeito {
     }
 }
 
+impl Armadura {
+    pub fn new(nome: String, defesa: u32, raridade: String) -> Self {
+        Armadura {
+            id: Uuid::new_v4(),
+            nome,
+            defesa,
+            raridade,
+        }
+    }
 
+    pub fn get_defesa(&self) -> u32 {
+        self.defesa
+    }
+}
+
+impl Arma {
+    pub fn new(nome: String, dano: u32, classe: Classe, raridade: String, efeito: Efeito) -> Self {
+        Arma {
+            id: Uuid::new_v4(),
+            nome,
+            dano,
+            classe,
+            efeito,
+            raridade,
+        }
+    }
+}
+
+
+impl Consumivel {
+    pub fn new(nome: String, efeito_vida: i32, descricao: String) -> Self {
+        Consumivel {
+            id: Uuid::new_v4(),
+            nome,
+            efeito_vida,
+            descricao,
+        }
+    }
+}
 //implementacao de ItemComportamento
 
 impl ItemComportamento for Armadura {
