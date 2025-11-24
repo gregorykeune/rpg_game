@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 use uuid::Uuid;
 use serde::{Serialize, Deserialize};
-use crate::{errors::ErroRPG, rpg_game::personagens::{Classe, Personagem}, traits::ItemComportamento};
+use crate::{errors::ErroRPG, rpg_game::personagens::{Classe, Personagem}, traits::{Identificavel, ItemComportamento}};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub enum ItemTipo {
@@ -41,7 +43,7 @@ pub enum Efeito {
     Fisico, //dano normal
     Congelamento, //ataque de congelamento adiciona 1 ponto de congelamento, com 3 pontos o oponente fica congelado e perde a vez
     Queimadura(u32, u32), // recebe um dano definido por um numero definido de rodadas 
-    Veneno(u32), // recebe um dano percentual até o final da batalha
+    Veneno(f32), // recebe um dano percentual até o final da batalha
     Eletricidade(u32, u32), // o personagem com esse efeito, ao tentar atacar tem chance de tomar choque e errar o ataque
     Sangramento(u32, u32), // o golpe tem chance de dar dano de sangramento (dano critico)
     Enfraquecimento(u32), // o dano causado pelo personagem com esse efeito é reduzido
@@ -80,6 +82,10 @@ impl Armadura {
     pub fn get_defesa(&self) -> u32 {
         self.defesa
     }
+
+    pub fn get_raridade(&self) -> String {
+        self.raridade.clone()
+    }
 }
 
 impl Arma {
@@ -93,6 +99,18 @@ impl Arma {
             raridade,
         }
     }
+
+    pub fn get_dano(&self) -> u32 {
+        self.dano
+    }
+
+    pub fn get_raridade(&self) -> String {
+        self.raridade.clone()
+    }
+
+    pub fn get_efeito(&self) -> Efeito {
+        self.efeito.clone()
+    }
 }
 
 
@@ -104,6 +122,14 @@ impl Consumivel {
             efeito_vida,
             descricao,
         }
+    }
+
+    pub fn get_efeito_vida(&self) -> i32 {
+        self.efeito_vida
+    }
+
+    pub fn get_descricao(&self) -> i32 {
+        self.efeito_vida
     }
 }
 //implementacao de ItemComportamento
@@ -267,5 +293,35 @@ impl ItemComportamento for ItemTipo {
             ItemTipo::Armadura(a) => a.usar(personagem),
             ItemTipo::Consumivel(c) => c.usar(personagem),
         }
+    }
+}
+
+impl Identificavel for Arma {
+    fn id(&self) -> Uuid{
+        self.get_id()
+    }
+
+    fn buscar_em<'a, T>(colecao: &'a HashMap<Uuid, T>, id: &Uuid) -> Option<&'a T> {
+        Self::buscar_item_por_id(colecao, id)
+    }
+}
+
+impl Identificavel for Armadura {
+    fn id(&self) -> Uuid{
+        self.get_id()
+    }
+
+    fn buscar_em<'a, T>(colecao: &'a HashMap<Uuid, T>, id: &Uuid) -> Option<&'a T> {
+        Self::buscar_item_por_id(colecao, id)
+    }
+}
+
+impl Identificavel for Consumivel {
+    fn id(&self) -> Uuid{
+        self.get_id()
+    }
+
+    fn buscar_em<'a, T>(colecao: &'a HashMap<Uuid, T>, id: &Uuid) -> Option<&'a T> {
+        Self::buscar_item_por_id(colecao, id)
     }
 }

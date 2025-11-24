@@ -1,5 +1,6 @@
 use uuid::Uuid;
 
+#[derive(Debug)]
 pub enum ErroRPG {
     PersonagemNaoEncontrado(Uuid),
     ItemNaoEncontrado(String), 
@@ -8,4 +9,5 @@ pub enum ErroRPG {
     ItemNaoUsavel(String),
     ArmaIncompativel(String),
     ClasseInvalida,
+    EfeitoInvalido,
 }
